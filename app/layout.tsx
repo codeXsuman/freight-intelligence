@@ -1,0 +1,1 @@
+import './globals.css'; export const metadata={title:'Freight Intelligence | Vessel Chartering & Procurement',description:'Forecast freight, optimize vessel chartering and plan bulk cargo procurement.'}; export default function RootLayout({children}:{children:React.ReactNode}){return <>{children}</>}

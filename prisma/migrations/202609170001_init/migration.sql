@@ -1,0 +1,13 @@
+CREATE TABLE "User" ("id" TEXT NOT NULL, "name" TEXT NOT NULL, "email" TEXT NOT NULL, "passwordHash" TEXT NOT NULL, "role" TEXT NOT NULL DEFAULT 'USER', "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT "User_pkey" PRIMARY KEY ("id"));
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE TABLE "Vessel" ("id" TEXT NOT NULL, "name" TEXT NOT NULL, "vesselType" TEXT NOT NULL, "capacity" INTEGER NOT NULL, "speed" DOUBLE PRECISION NOT NULL, "fuelConsumption" DOUBLE PRECISION NOT NULL, "dailyRate" DOUBLE PRECISION NOT NULL, "availableDate" TIMESTAMP(3) NOT NULL, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT "Vessel_pkey" PRIMARY KEY ("id"));
+CREATE UNIQUE INDEX "Vessel_name_key" ON "Vessel"("name");
+CREATE TABLE "Port" ("id" TEXT NOT NULL, "name" TEXT NOT NULL, "country" TEXT NOT NULL, "maxDraft" DOUBLE PRECISION NOT NULL, "handlingCapacity" INTEGER NOT NULL, "congestion" DOUBLE PRECISION NOT NULL, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT "Port_pkey" PRIMARY KEY ("id"));
+CREATE UNIQUE INDEX "Port_name_key" ON "Port"("name");
+CREATE TABLE "FreightRate" ("id" TEXT NOT NULL, "date" TIMESTAMP(3) NOT NULL, "origin" TEXT NOT NULL, "destination" TEXT NOT NULL, "vesselType" TEXT NOT NULL, "rate" DOUBLE PRECISION NOT NULL, CONSTRAINT "FreightRate_pkey" PRIMARY KEY ("id"));
+CREATE INDEX "FreightRate_date_idx" ON "FreightRate"("date"); CREATE INDEX "FreightRate_origin_destination_idx" ON "FreightRate"("origin","destination");
+CREATE TABLE "Demand" ("id" TEXT NOT NULL, "date" TIMESTAMP(3) NOT NULL, "cargoType" TEXT NOT NULL, "tonnes" INTEGER NOT NULL, CONSTRAINT "Demand_pkey" PRIMARY KEY ("id"));
+CREATE INDEX "Demand_date_cargoType_idx" ON "Demand"("date","cargoType");
+CREATE TABLE "OptimizationRun" ("id" TEXT NOT NULL, "userId" TEXT NOT NULL, "input" JSONB NOT NULL, "result" JSONB NOT NULL, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT "OptimizationRun_pkey" PRIMARY KEY ("id"));
+CREATE INDEX "OptimizationRun_userId_createdAt_idx" ON "OptimizationRun"("userId","createdAt");
+ALTER TABLE "OptimizationRun" ADD CONSTRAINT "OptimizationRun_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

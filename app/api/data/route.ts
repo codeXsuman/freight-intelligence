@@ -1,0 +1,2 @@
+import { NextResponse } from 'next/server'; import {getSessionUser} from '@/lib/auth'; import {prisma} from '@/lib/prisma';
+export async function GET(){const user=await getSessionUser();if(!user)return NextResponse.json({error:'Unauthorized'},{status:401});const [vessels,ports,freight,demand]=await Promise.all([prisma.vessel.count(),prisma.port.count(),prisma.freightRate.count(),prisma.demand.count()]);return NextResponse.json({vessels,ports,freight,demand});}
