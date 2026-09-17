@@ -1,8 +1,72 @@
-generator client { provider = "prisma-client-js" }
-datasource db { provider = "postgresql" url = env("DATABASE_URL") }
-model User { id String @id @default(cuid()) name String email String @unique passwordHash String role String @default("USER") createdAt DateTime @default(now()) optimizationRuns OptimizationRun[] }
-model Vessel { id String @id @default(cuid()) name String @unique vesselType String capacity Int speed Float fuelConsumption Float dailyRate Float availableDate DateTime createdAt DateTime @default(now()) }
-model Port { id String @id @default(cuid()) name String @unique country String maxDraft Float handlingCapacity Int congestion Float createdAt DateTime @default(now()) }
-model FreightRate { id String @id @default(cuid()) date DateTime origin String destination String vesselType String rate Float @@index([date]) @@index([origin,destination]) }
-model Demand { id String @id @default(cuid()) date DateTime cargoType String tonnes Int @@index([date,cargoType]) }
-model OptimizationRun { id String @id @default(cuid()) userId String input Json result Json createdAt DateTime @default(now()) user User @relation(fields:[userId],references:[id],onDelete:Cascade) @@index([userId,createdAt]) }
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String             @id @default(cuid())
+  name            String
+  email           String             @unique
+  passwordHash    String
+  role            String             @default("USER")
+  createdAt       DateTime           @default(now())
+  optimizationRuns OptimizationRun[]
+}
+
+model Vessel {
+  id              String   @id @default(cuid())
+  name            String   @unique
+  vesselType      String
+  capacity        Int
+  speed           Float
+  fuelConsumption Float
+  dailyRate       Float
+  availableDate   DateTime
+  createdAt       DateTime @default(now())
+}
+
+model Port {
+  id                String   @id @default(cuid())
+  name              String   @unique
+  country           String
+  maxDraft          Float
+  handlingCapacity  Int
+  congestion        Float
+  createdAt         DateTime @default(now())
+}
+
+model FreightRate {
+  id          String   @id @default(cuid())
+  date        DateTime
+  origin      String
+  destination String
+  vesselType  String
+  rate        Float
+
+  @@index([date])
+  @@index([origin, destination])
+}
+
+model Demand {
+  id        String   @id @default(cuid())
+  date      DateTime
+  cargoType String
+  tonnes    Int
+
+  @@index([date, cargoType])
+}
+
+model OptimizationRun {
+  id        String   @id @default(cuid())
+  userId    String
+  input     Json
+  result    Json
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
